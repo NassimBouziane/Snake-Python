@@ -15,13 +15,15 @@ red=(255,0,0)
 green=(0,255,0)
 grass=(0,100,0)
 
-#coordonnates changes
+#coordinates changes
 x1= display_width/2
 y1 = display_height/2 #Spawn point in the middle
 x1_change = 0       
 y1_change = 0
 
 snake_width = 10 
+snake_List = []
+Length_of_snake = 1
 clock = pygame.time.Clock()
 font = pygame.font.SysFont(None, 50)
 fontScore = pygame.font.SysFont(None, 25)
@@ -32,6 +34,10 @@ points = 0
 
 display.fill(grass)
 
+def our_snake(snake_block, snake_list):
+    for x in snake_list:
+        pygame.draw.rect(display, green, [x[0], x[1], snake_block, snake_block])
+ 
 
 def isSnakeinRange():
     if x1 >= appleX-10 and x1 <= appleX+10 and y1 >= appleY-10 and y1<=appleY+10:
@@ -64,18 +70,27 @@ while not game_over:
         game_over=True
     if isSnakeinRange() == True:
         points += 2
+        Length_of_snake += 1
         appleX = round(random.randrange(10, display_width))
         appleY = round(random.randrange(10, display_width)) # random position for apples
 
     display.fill(grass) # Reset display behind the snake
-    pygame.draw.rect(display,green,[x1,y1,snake_width,snake_width])
-    pygame.draw.rect(display,red, [appleX, appleY, snake_width,snake_width])
+    pygame.draw.rect(display,green,[x1,y1,snake_width,snake_width]) #Snake 
+    snake_Head = []
+    snake_Head.append(x1)
+    snake_Head.append(y1)
+    snake_List.append(snake_Head)
+    our_snake(snake_width, snake_List)
+
+    pygame.draw.rect(display,red, [appleX, appleY, snake_width,snake_width]) #Apple spawning
+    if len(snake_List)>Length_of_snake:
+        del snake_List[0]
     display.blit(fontScore.render('Points : ' + str(points), True, red),  [25 ,25]) # Display score
 
     pygame.display.update()
     clock.tick(30)
 display.blit(font.render('You lost with ' + str(points) + ' Points', True, red), [display_width/5,display_height/4]) #Add variable for points
 pygame.display.update()
-time.sleep(3) # Replace this with a function that show of a menu annd you select if you continue or not
+time.sleep(1) # Replace this with a function that show of a menu annd you select if you continue or not
 pygame.quit()
 quit()
