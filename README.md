@@ -1,2 +1,2 @@
 # Snake-Python
-Personal project to learrn python and pygame
+Personal project to learn python and pygame
