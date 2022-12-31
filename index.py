@@ -23,13 +23,25 @@ y1_change = 0
 
 snake_width = 10 
 clock = pygame.time.Clock()
-font_style = pygame.font.SysFont(None, 50)
-appleX = round(random.randrange(0, display_width) /10.0) * 10.0
-appleY = round(random.randrange(0, display_width) /10.0) * 10.0
+font = pygame.font.SysFont(None, 50)
+fontScore = pygame.font.SysFont(None, 25)
+appleX = round(random.randrange(10, display_width))
+appleY = round(random.randrange(10, display_width)) # random position for apples
+
+points = 0
 
 display.fill(grass)
+
+
+def isSnakeinRange():
+    if x1 >= appleX-10 and x1 <= appleX+10 and y1 >= appleY-10 and y1<=appleY+10:
+        return True
+    else:
+        return False
+
 while not game_over:
     for event in pygame.event.get():
+
         #Here we have all events
         if event.type== pygame.QUIT:
             game_over=True
@@ -49,13 +61,20 @@ while not game_over:
     x1 += x1_change
     y1 += y1_change
     if x1 < 0 or y1 < 0 or x1 >= display_width or y1 >= display_height:
-        game_over=True 
-    display.fill(grass)
+        game_over=True
+    if isSnakeinRange() == True:
+        points += 2
+        appleX = round(random.randrange(10, display_width))
+        appleY = round(random.randrange(10, display_width)) # random position for apples
+
+    display.fill(grass) # Reset display behind the snake
     pygame.draw.rect(display,green,[x1,y1,snake_width,snake_width])
     pygame.draw.rect(display,red, [appleX, appleY, snake_width,snake_width])
+    display.blit(fontScore.render('Points : ' + str(points), True, red),  [25 ,25]) # Display score
+
     pygame.display.update()
     clock.tick(30)
-display.blit(font_style.render('You lost with xx Points', True, red), [display_width/5,display_height/4]) #Add variable for points
+display.blit(font.render('You lost with ' + str(points) + ' Points', True, red), [display_width/5,display_height/4]) #Add variable for points
 pygame.display.update()
 time.sleep(3) # Replace this with a function that show of a menu annd you select if you continue or not
 pygame.quit()
